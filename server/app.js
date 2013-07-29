@@ -1,5 +1,8 @@
+// Dependencies
+var net = require('net'),
+    express = require('express');
+
 // mochad client
-var net = require('net');
 var client;
 
 function setupConnection() {
@@ -17,7 +20,6 @@ function setupConnection() {
 setupConnection();
 
 // Web server
-var express = require('express');
 var app = express();
 
 app.get('/', function(req, res) {
