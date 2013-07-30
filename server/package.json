@@ -1,6 +1,6 @@
 {
     "name": "dorm-automation",
-    "description": "Server for dorm automation system."
+    "description": "Server for dorm automation system.",
     "author": "Kevin Wang <kevin@kevinwang.com>",
     "dependencies": {
         "express": "3.3.x"
