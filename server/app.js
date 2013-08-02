@@ -15,9 +15,8 @@ function setupConnection() {
 
     client.on('error', function(e) {
         console.log('Connection error: ' + e.code);
-        console.log('Restarting mochad; retrying in 3 seconds...');
-        exec('mochad');
-        setTimeout(setupConnection, 3000);
+        console.log('Retrying in 1 second...');
+        setTimeout(setupConnection, 1000);
     });
 }
 
