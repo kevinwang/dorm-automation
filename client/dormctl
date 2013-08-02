@@ -3,7 +3,7 @@
 SERVER_HOSTNAME="192.168.1.216"
 SERVER_PORT="80"
 
-if [ $# == 0 ]
+if [ $# -eq 0 ]
 then
     echo "usage: $0 module_address {on|off}"
     exit 1
