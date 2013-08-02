@@ -5,7 +5,7 @@ SERVER_PORT="80"
 
 if [ $# == 0 ]
 then
-    echo "usage: $0 module_address (on|off)"
+    echo "usage: $0 module_address {on|off}"
     exit 1
 fi
 
