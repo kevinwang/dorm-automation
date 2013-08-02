@@ -1,12 +1,15 @@
 #!/usr/bin/env sh
 
+SERVER_HOSTNAME="192.168.1.216"
+SERVER_PORT="80"
+
 if [ $# == 0 ]
 then
     echo "usage: $0 module_address (on|off)"
     exit 1
 fi
 
-res=`curl -sX PUT -d "value=$2" 192.168.1.19/api/modules/$1`
+res=`curl -sX PUT -d "value=$2" $SERVER_HOSTNAME:$SERVER_PORT/api/modules/$1`
 if [ "$res" != "OK" ]
 then
     echo $res
