@@ -119,6 +119,7 @@ app.get('/', function(req, res) {
 app.put('/api/modules/:addr', function(req, res) {
     var addr = req.params.addr;
     var value = req.body.value;
+    // Validate module address (house code A-P, unit code 1-16)
     if (/[A-Pa-p]([1-9]$|1[0-6])/.test(addr) && ['on', 'off'].indexOf(value) != -1) { 
         enqueueX10Command(addr, value, function(err) {
             if (err) {
