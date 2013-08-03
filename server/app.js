@@ -1,28 +1,35 @@
-/*
+/**
  * Dorm automation server. Uses a queue to limit command frequency because
  * mochad often becomes unresponsive if commands are launched in quick
  * succession.
+ *
+ * @author Kevin Wang <kevin@kevinwang.com>
  */
 
-// Dependencies
+/**
+ * Dependencies
+ */
 var net = require('net'),
     express = require('express'),
     exec = require('child_process').exec;
 
-// mochad client
+/**
+ * ========== mochad client ==========
+ */
+
 var client;
 
-/*
+/**
  * Prevents setupConnection from being called multiple times
  */
 var disconnected;
 
-/*
+/**
  * Command (and callback) queue
  */
 var cmdqueue = []
 
-/*
+/**
  * Create socket connection to mochad
  */
 function setupConnection() {
@@ -43,7 +50,7 @@ function setupConnection() {
     });
 }
 
-/*
+/**
  * Try to send a command, and restart mochad if it fails
  */
 function mochadSafe(cmdobj) {
@@ -61,7 +68,7 @@ function mochadSafe(cmdobj) {
     }, 250);
 }
 
-/*
+/**
  * Add command to queue
  */
 function enqueueX10Command(addr, value, callback) {
@@ -69,14 +76,14 @@ function enqueueX10Command(addr, value, callback) {
     cmdqueue.push({cmd: cmd, callback: callback});
 }
 
-/*
+/**
  * Make sure mochad is still alive
  */
 function mochadHeartbeat() {
     mochadSafe({cmd: 'st'});
 }
 
-/*
+/**
  * Send next command on the queue, or send heartbeat if queue is empty
  */
 function sendNextCommand() {
@@ -92,7 +99,10 @@ function sendNextCommand() {
 setupConnection();
 setTimeout(sendNextCommand, 2000);
 
-// Web server
+/**
+ * ========== Web server ==========
+ */
+
 var app = express();
 app.use(express.bodyParser());
 
