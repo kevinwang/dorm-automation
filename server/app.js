@@ -25,9 +25,14 @@ var client;
 var disconnected;
 
 /**
- * Command (and callback) queue
+ * Command queue
  */
 var cmdqueue = []
+
+/**
+ * Command sending period, in ms
+ */
+var CMD_PERIOD = 1750;
 
 /**
  * Create socket connection to mochad
@@ -53,13 +58,13 @@ function setupConnection() {
 /**
  * Try to send a command, and restart mochad if it fails
  */
-function mochadSafe(cmdobj) {
+function mochadSafe(cmd) {
     var lastBytesRead = client.bytesRead; // Check for acknowledgment
-    console.log('Command: ' + cmdobj.cmd);
-    client.write(cmdobj.cmd + '\n', null, cmdobj.callback);
+    console.log('Command: ' + cmd);
+    client.write(cmd + '\n', null);
     setTimeout(function() {
         if (client.bytesRead == lastBytesRead) {
-            cmdqueue.unshift(cmdobj);
+            cmdqueue.unshift(cmd);
             console.log('mochad unresponsive, restarting...');
             exec('pkill -9 mochad; mochad', function() {
                 console.log('mochad restarted');
@@ -73,31 +78,32 @@ function mochadSafe(cmdobj) {
  */
 function enqueueX10Command(addr, value, callback) {
     var cmd = 'pl ' + addr + ' ' + value;
-    cmdqueue.push({cmd: cmd, callback: callback});
+    cmdqueue.push(cmd);
+    callback();
 }
 
 /**
  * Make sure mochad is still alive
  */
 function mochadHeartbeat() {
-    mochadSafe({cmd: 'st'});
+    mochadSafe('st');
 }
 
 /**
  * Send next command on the queue, or send heartbeat if queue is empty
  */
 function sendNextCommand() {
-    setTimeout(sendNextCommand, 2000);
+    setTimeout(sendNextCommand, CMD_PERIOD);
     if (cmdqueue.length == 0) {
         mochadHeartbeat();
         return;
     }
-    var cmdobj = cmdqueue.shift();
-    mochadSafe(cmdobj);
+    var cmd = cmdqueue.shift();
+    mochadSafe(cmd);
 }
 
 setupConnection();
-setTimeout(sendNextCommand, 2000);
+sendNextCommand();
 
 /**
  * ========== Web server ==========
