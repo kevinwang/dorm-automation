@@ -66,7 +66,7 @@ function mochadSafe(cmd) {
         if (client.bytesRead == lastBytesRead) {
             cmdqueue.unshift(cmd);
             console.log('mochad unresponsive, restarting...');
-            exec('pkill -9 mochad; mochad', function() {
+            exec('pkill -9 mochad; /usr/local/bin/mochad', function() {
                 console.log('mochad restarted');
             });
         }
