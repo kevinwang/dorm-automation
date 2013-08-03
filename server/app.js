@@ -117,8 +117,10 @@ app.get('/', function(req, res) {
 });
 
 app.put('/api/modules/:addr', function(req, res) {
-    if (['on', 'off'].indexOf(req.body.value) != -1) { 
-        enqueueX10Command(req.params.addr, req.body.value, function(err) {
+    var addr = req.params.addr;
+    var value = req.body.value;
+    if (/[A-Pa-p]([1-9]$|1[0-6])/.test(addr) && ['on', 'off'].indexOf(value) != -1) { 
+        enqueueX10Command(addr, value, function(err) {
             if (err) {
                 res.send(500);
             }
