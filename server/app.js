@@ -25,6 +25,12 @@ var client;
 var disconnected;
 
 /**
+ * Whether a timeout exists for sendNextCommand, aka whether the command loop
+ * is running
+ */
+var cmdLoopRunning = false;
+
+/**
  * Command queue
  */
 var cmdqueue = []
@@ -79,31 +85,28 @@ function mochadSafe(cmd) {
 function enqueueX10Command(addr, value, callback) {
     var cmd = 'rf ' + addr + ' ' + value;
     cmdqueue.push(cmd);
+    if (!cmdLoopRunning) {
+        sendNextCommand();
+    }
     callback();
 }
 
 /**
- * Make sure mochad is still alive
- */
-function mochadHeartbeat() {
-    mochadSafe('st');
-}
-
-/**
- * Send next command on the queue, or send heartbeat if queue is empty
+ * Send next command in the queue
  */
 function sendNextCommand() {
-    setTimeout(sendNextCommand, CMD_PERIOD);
-    if (cmdqueue.length == 0) {
-        mochadHeartbeat();
-        return;
+    if (cmdqueue.length > 0) {
+        cmdLoopRunning = true;
+        var cmd = cmdqueue.shift();
+        mochadSafe(cmd);
+        setTimeout(sendNextCommand, CMD_PERIOD);
     }
-    var cmd = cmdqueue.shift();
-    mochadSafe(cmd);
+    else {
+        cmdLoopRunning = false;
+    }
 }
 
 setupConnection();
-sendNextCommand();
 
 /**
  * ========== Web server ==========
@@ -120,7 +123,8 @@ app.put('/api/modules/:addr', function(req, res) {
     var addr = req.params.addr;
     var value = req.body.value;
     // Validate module address (house code A-P, unit code 1-16)
-    if (/[A-Pa-p]([1-9]$|1[0-6])/.test(addr) && ['on', 'off'].indexOf(value) != -1) { 
+    if (/[A-Pa-p]([1-9]$|1[0-6])/.test(addr) &&
+        ['on', 'off'].indexOf(value) != -1) { 
         enqueueX10Command(addr, value, function(err) {
             if (err) {
                 res.send(500);
