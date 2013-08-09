@@ -77,7 +77,7 @@ function mochadSafe(cmd) {
  * Add command to queue
  */
 function enqueueX10Command(addr, value, callback) {
-    var cmd = 'pl ' + addr + ' ' + value;
+    var cmd = 'rf ' + addr + ' ' + value;
     cmdqueue.push(cmd);
     callback();
 }
