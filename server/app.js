@@ -11,7 +11,8 @@
  */
 var net = require('net'),
     express = require('express'),
-    exec = require('child_process').exec;
+    exec = require('child_process').exec,
+    url = require('url');
 
 /**
  * ========== mochad client ==========
@@ -116,12 +117,20 @@ var app = express();
 app.use(express.bodyParser());
 
 app.get('/', function(req, res) {
-    res.send({hello: 'world'});
+    res.writeHead(200, { "Content-Type": "text/html" });
+    res.write('<ul>');
+    res.write('<li>Fan: <a href="/api/modules/a1?value=on">On</a> <a href="/api/modules/a1?value=off">Off</a></li>');
+    res.write('<li>Amp: <a href="/api/modules/a2?value=on">On</a> <a href="/api/modules/a2?value=off">Off</a></li>');
+    res.write('<li>Curtis\'s Lamp: <a href="/api/modules/a4?value=on">On</a> <a href="/api/modules/a4?value=off">Off</a></li>');
+    res.write('</ul>');
+    res.end();
 });
 
-app.put('/api/modules/:addr', function(req, res) {
+app.get('/api/modules/:addr', function(req, res) {
+    var url_parts = url.parse(req.url, true);
+    var query = url_parts.query;
     var addr = req.params.addr;
-    var value = req.body.value;
+    var value = query.value;
     // Validate module address (house code A-P, unit code 1-16)
     if (/[A-Pa-p]([1-9]$|1[0-6])/.test(addr) &&
         ['on', 'off'].indexOf(value) != -1) { 
@@ -130,13 +139,14 @@ app.put('/api/modules/:addr', function(req, res) {
                 res.send(500);
             }
             else {
-                res.send(200);
+                res.redirect('/');
             }
         });
     }
     else {
         res.send(400);
     }
+    res.end();
 });
 
 app.listen(80);
