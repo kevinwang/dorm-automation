@@ -9,4 +9,4 @@ then
     exit 1
 fi
 
-curl -s http://$DORMCTL_SERVER/api/modules/$1?value=$2
+curl -s http://$DORMCTL_SERVER/api/modules/$1?value=$2 > /dev/null
