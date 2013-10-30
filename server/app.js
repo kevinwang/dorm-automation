@@ -118,11 +118,13 @@ app.use(express.bodyParser());
 
 app.get('/', function(req, res) {
     res.writeHead(200, { "Content-Type": "text/html" });
+    res.write('<h1>Dorm Automation</h1>');
     res.write('<ul>');
     res.write('<li>Fan: <a href="/api/modules/a1?value=on">On</a> <a href="/api/modules/a1?value=off">Off</a></li>');
     res.write('<li>Amp: <a href="/api/modules/a2?value=on">On</a> <a href="/api/modules/a2?value=off">Off</a></li>');
     res.write('<li>Curtis\'s Lamp: <a href="/api/modules/a4?value=on">On</a> <a href="/api/modules/a4?value=off">Off</a></li>');
     res.write('</ul>');
+    res.write('<footer><p>&copy; 2013 Kevin Wang</p></footer');
     res.end();
 });
 
