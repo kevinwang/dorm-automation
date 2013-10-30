@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
-SERVER_HOSTNAME="192.168.1.216"
-SERVER_PORT="80"
+# Replace this with server hostname/IP address
+DORMCTL_SERVER="127.0.0.1"
 
 if [ $# -eq 0 ]
 then
