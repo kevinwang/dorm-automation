@@ -3,7 +3,7 @@
 59 9 * * 1,3,5 sleep 30; /home/pi/dorm-automation/client/dormctl a2 on
 
 # Curtis - turns on amp for 10 minutes for media server alarm
-14 4 * * 1-5 sleep 30; /home/pi/dorm-automation/client/dormctl a2 on
-25 4 * * 1-5 /home/pi/dorm-automation/client/dormctl a2 off
-44 5 * * 1-5 sleep 30; /home/pi/dorm-automation/client/dormctl a2 on
-55 5 * * 1-5 /home/pi/dorm-automation/client/dormctl a2 off
+29 4 * * 1-5 sleep 30; /home/pi/dorm-automation/client/dormctl a2 on
+40 4 * * 1-5 /home/pi/dorm-automation/client/dormctl a2 off
+59 5 * * 1-5 sleep 30; /home/pi/dorm-automation/client/dormctl a2 on
+10 6 * * 1-5 /home/pi/dorm-automation/client/dormctl a2 off
